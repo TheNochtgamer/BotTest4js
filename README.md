@@ -1,1 +1,1 @@
-## Simple discord.js v14 layout
+# Simple discord.js v14 template

@@ -49,19 +49,26 @@ module.exports = class Utils {
 
   async embedReply(interaction, embedData) {
     const embed = new EmbedBuilder(embedData);
-    if (!embedData.color) embed.setColor('White');
-    if (!embedData.timestamp) embed.setTimestamp();
-    if (!embedData.footer)
+    let reply;
+    if (typeof embedData.color === 'undefined') {
+      embed.setColor('White');
+    } else {
+      embed.setColor(embedData.color);
+    }
+    if (typeof embedData.timestamp === 'undefined') embed.setTimestamp();
+    if (typeof embedData.footer === 'undefined')
       embed.setFooter({ text: interaction.client.user.username });
 
     try {
       if (interaction.replied || interaction.deferred) {
-        await interaction.editReply({ embeds: [embed], ephemeral: true });
+        reply = await interaction.editReply({ embeds: [embed] });
       } else {
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        reply = await interaction.reply({ embeds: [embed], ephemeral: true });
       }
     } catch (error) {
-      console.log('Error al responder una interaccion', error);
+      console.log(`Error al responder una interaccion`, error);
+      return null;
     }
+    return reply;
   }
 };

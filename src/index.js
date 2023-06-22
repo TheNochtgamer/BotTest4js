@@ -1,7 +1,7 @@
 require('dotenv').config();
 const Bot = require('./structures/Client');
 
-(async () => {
+(async function init() {
   const bot = new Bot();
-  await bot.init(process.env.TOKEN);
+  await Promise.allSettled([bot.init(process.env.TOKEN)]);
 })();

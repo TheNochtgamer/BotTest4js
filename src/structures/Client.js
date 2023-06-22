@@ -4,12 +4,13 @@ const {
   Partials,
   PresenceUpdateStatus,
   Collection,
+  ActivityType,
 } = require('discord.js');
 const Utils = require('./Utils');
 
 module.exports = class Bot extends Client {
-  constructor(
-    options = {
+  constructor() {
+    super({
       intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
@@ -19,10 +20,16 @@ module.exports = class Bot extends Client {
       partials: [Partials.Message],
       presence: {
         status: PresenceUpdateStatus.DoNotDisturb,
+        // activities: [
+        //   {
+        //     name: 'Test',
+        //     type: ActivityType.Playing,
+        //     url: 'https://www.twitch.tv/thenochtgamer',
+        //   },
+        // ],
       },
-    },
-  ) {
-    super(options);
+      // allowedMentions: { parse: ['everyone', 'roles', 'users'] },
+    });
 
     this.commands = new Collection();
     this.utils = new Utils(this);
