@@ -1,14 +1,13 @@
-const { SlashCommandBuilder, CommandInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
+/**
+ * @type {import('../types').SlashCommand}
+ */
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('ping')
     .setDescription('Un comando que hace ping'),
 
-  /**
-   *
-   * @param {CommandInteraction} interaction
-   */
   async run(interaction) {
     console.log(`${interaction.user.tag} hizo ping`);
     await interaction.reply({

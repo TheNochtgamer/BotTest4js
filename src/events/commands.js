@@ -1,12 +1,9 @@
-const { Interaction } = require('discord.js');
-
+/**
+ * @type {import("../types").CommandEvent}
+ */
 module.exports = {
   name: 'interactionCreate',
 
-  /**
-   *
-   * @param {Interaction} interaction
-   */
   async run(interaction) {
     if (!interaction.isCommand()) return;
 
@@ -89,7 +86,7 @@ module.exports = {
         `(U) ${interaction.user.tag} intento acceder al comando "${interaction.commandName}" sin autorizacion`,
       );
       interaction.client.utils.embedReply(interaction, {
-        color: 15548997,
+        color: 'Red',
         author: { name: '⛔Prohibido' },
         description:
           '```\n \n> ' +

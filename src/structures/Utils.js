@@ -3,11 +3,15 @@ const fs = require('fs');
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = class Utils {
+  /**
+   *
+   * @param {import('discord.js').Client} client
+   */
   constructor(client) {
     this.client = client;
   }
 
-  async loadFiles(dirName) {
+  async loadFiles(dirName = '') {
     const PATH = path.join(__dirname, '../', dirName);
     const FILES = fs
       .readdirSync(PATH)
@@ -19,6 +23,11 @@ module.exports = class Utils {
     return FILES;
   }
 
+  /**
+   * Chequea que un snowflake de discord sea valido
+   * @param {String} id
+   * @returns {Boolean}
+   */
   checkId(id = '') {
     return id.length >= 17 && id.length <= 20 && !isNaN(parseInt(id));
   }
@@ -47,9 +56,16 @@ module.exports = class Utils {
     }
   }
 
+  /**
+   *
+   * @param {import('discord.js').CommandInteraction} interaction
+   * @param {import('discord.js').EmbedData} embedData
+   * @returns {import('discord.js').InteractionResponse|import('discord.js').Message|null}
+   */
   async embedReply(interaction, embedData) {
     const embed = new EmbedBuilder(embedData);
     let reply;
+
     if (typeof embedData.color === 'undefined') {
       embed.setColor('White');
     } else {

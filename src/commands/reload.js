@@ -1,5 +1,8 @@
-const { SlashCommandBuilder, CommandInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
+/**
+ * @type {import('../types').SlashCommand}
+ */
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('reload')
@@ -7,21 +10,18 @@ module.exports = {
     .setDefaultMemberPermissions(8),
   onlyOwners: true,
 
-  /**
-   *
-   * @param {CommandInteraction} interaction
-   */
   async run(interaction) {
-    const c = interaction.client;
-
     console.log(`(U) ${interaction.user.tag} esta recargando los archivos...`);
     await interaction.reply({
       ephemeral: true,
       content: `Recargando archivos, porfavor espera...`,
     });
 
-    await Promise.allSettled([c.loadEvents(), c.loadCommands()]);
-    await c.utils.summitCommands();
+    await Promise.allSettled([
+      interaction.client.loadEvents(),
+      interaction.client.loadCommands(),
+    ]);
+    await interaction.client.utils.summitCommands();
 
     await interaction.editReply({
       content: `Recarga de archivos terminada, resultados en la consola`,

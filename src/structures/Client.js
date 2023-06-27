@@ -4,18 +4,22 @@ const {
   Partials,
   PresenceUpdateStatus,
   Collection,
-  ActivityType,
+  // ActivityType,
 } = require('discord.js');
 const Utils = require('./Utils');
 
 module.exports = class Bot extends Client {
+  /** @type {import('../types').SlashCommandsCollection} */
+  commands = new Collection();
+  utils = new Utils(this);
+
   constructor() {
     super({
       intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.GuildMessageReactions,
         IntentsBitField.Flags.MessageContent,
+        // IntentsBitField.Flags.
       ],
       partials: [Partials.Message],
       presence: {
@@ -30,14 +34,11 @@ module.exports = class Bot extends Client {
       },
       // allowedMentions: { parse: ['everyone', 'roles', 'users'] },
     });
-
-    this.commands = new Collection();
-    this.utils = new Utils(this);
   }
 
   async loadCommands() {
     console.log('Cargando comandos...');
-    const FILES = await this.utils.loadFiles('cmd');
+    const FILES = await this.utils.loadFiles('commands');
     this.commands.clear();
 
     FILES.forEach(file => {
