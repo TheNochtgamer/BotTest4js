@@ -1,3 +1,10 @@
+const { Collection } = require('discord.js');
+
+/**
+ * @type {import("../types").RateLimits}
+ */
+const rateLimits = new Collection();
+
 /**
  * @type {import("../types").CommandEvent}
  */
@@ -28,7 +35,7 @@ module.exports = {
     // allPerms_req = Boolean
     // everthing_req = Boolean
     // onlyOwners = Boolean
-    const pass = () => {
+    const authPass = () => {
       if (process.env.BOT_OWNER?.includes(interaction.user.id)) return 1;
       if (command.onlyOwners) return 0;
 
@@ -81,21 +88,53 @@ module.exports = {
       if (notPass === checks && checks) return 0;
       return 1;
     };
-    if (!pass()) {
+    if (!authPass()) {
       console.log(
-        `(U) ${interaction.user.tag} intento acceder al comando "${interaction.commandName}" sin autorizacion`,
+        `(U) ${interaction.user.username} intento acceder al comando "${interaction.commandName}" sin autorizacion`,
       );
       interaction.client.utils.embedReply(interaction, {
         color: 'Red',
         author: { name: '⛔Prohibido' },
         description:
-          '```\n \n> ' +
-          interaction.user.username +
-          '\nNo tenes permisos para usar este comando.\n \n```',
+          '```\n \n' +
+          `> ${interaction.user.username}\n` +
+          'No tienes permisos para usar este comando.\n \n```',
       });
       return;
     }
     // --NCheckAuth--
+
+    // --CheckRateLimit--
+    const ratePass = () => {
+      if (
+        process.env.BOT_OWNER?.includes(interaction.user.id) ||
+        !command.rateLimit
+      )
+        return 1;
+      const now = new Date();
+      const identifier = `${interaction.commandName}-${interaction.user.id}`;
+      const rateLimitDate = rateLimits.get(identifier);
+
+      if (rateLimitDate && now - rateLimitDate < command.rateLimit) return 0;
+
+      rateLimits.set(identifier, new Date());
+      return 1;
+    };
+    if (!ratePass()) {
+      console.log(
+        `(U) ${interaction.user.username} supero el limite del comando "${interaction.commandName}"`,
+      );
+      interaction.client.utils.embedReply(interaction, {
+        color: 'Yellow',
+        author: { name: '🖐️Espera' },
+        description:
+          '```\n \n' +
+          `> ${interaction.user.username}\n` +
+          'Superaste el limite de ejecuciones, prueba de nuevo mas tarde.\n \n```',
+      });
+      return;
+    }
+    // --CheckRateLimit--
 
     try {
       await command.run(interaction);

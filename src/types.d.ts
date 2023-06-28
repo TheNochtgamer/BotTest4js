@@ -44,6 +44,11 @@ export interface SlashCommand {
   onlyOwners?: boolean;
 
   /**
+   * Tiempo en ms de enfriamiento del comando por persona
+   */
+  rateLimit?: Number;
+
+  /**
    * Los datos del comando a cargar a discord
    */
   data: Discord.SlashCommandBuilder;
@@ -57,3 +62,5 @@ export interface SlashCommand {
 }
 
 export type SlashCommandsCollection = Discord.Collection<String, SlashCommand>;
+
+export type RateLimits = Discord.Collection<String, Date>;

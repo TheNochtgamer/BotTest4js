@@ -35,7 +35,7 @@ module.exports = {
             ? subs
                 .map(
                   sub =>
-                    `</${command.name}:${command.id}> ${sub.name} ${
+                    `> </${command.name}:${command.id}> ${sub.name} ${
                       sub.options
                         ?.map(opt =>
                           opt.required ? `<${opt.name}>` : `[${opt.name}]`,
@@ -44,7 +44,7 @@ module.exports = {
                     } -- ${sub.description}`,
                 )
                 .join('\n')
-            : `</${command.name}:${command.id}> ${command.options
+            : `> </${command.name}:${command.id}> ${command.options
                 .map(opt => (opt.required ? `<${opt.name}>` : `[${opt.name}]`))
                 .join(' ')} -- ${command.description}`;
         })
